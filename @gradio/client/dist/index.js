@@ -459,6 +459,7 @@ const map_data_to_params = (data, api_info) => {
   const parameters = Object.values(api_info.named_endpoints).flatMap(
     (values) => values.parameters
   );
+  console.log("parameters:"+parameters);
   if (Array.isArray(data)) {
     if (data.length > parameters.length) {
       console.warn("Too many arguments provided for the endpoint.");
