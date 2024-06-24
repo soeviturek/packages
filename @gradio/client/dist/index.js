@@ -61,6 +61,7 @@ async function get_jwt(space, token, cookies) {
     const r = await fetch(`https://huggingface.co/api/spaces/${space}/jwt`, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "withCredentials": "false",
         ...cookies ? { Cookie: cookies } : {}
       }
     });
@@ -142,7 +143,7 @@ async function get_cookie_header(http_protocol, host, auth, _fetch, hf_token) {
   const formData = new FormData();
   formData.append("username", auth == null ? void 0 : auth[0]);
   formData.append("password", auth == null ? void 0 : auth[1]);
-  let headers = {};
+  let headers = {"withCredentials": "false"};
   if (hf_token) {
     headers.Authorization = `Bearer ${hf_token}`;
   }
@@ -150,7 +151,7 @@ async function get_cookie_header(http_protocol, host, auth, _fetch, hf_token) {
     headers,
     method: "POST",
     body: formData,
-    credentials: "include"
+    // credentials: "include"
   });
   if (res.status === 200) {
     return res.headers.get("set-cookie");
@@ -203,7 +204,7 @@ const parse_and_set_cookies = (cookie_header) => {
 const RE_SPACE_NAME = /^[a-zA-Z0-9_\-\.]+\/[a-zA-Z0-9_\-\.]+$/;
 const RE_SPACE_DOMAIN = /.*hf\.space\/{0,1}$/;
 async function process_endpoint(app_reference, hf_token) {
-  const headers = {};
+  const headers = {"withCredentials": "false"};
   if (hf_token) {
     headers.Authorization = `Bearer ${hf_token}`;
   }
@@ -498,7 +499,7 @@ async function view_api() {
     return this.api_info;
   const { hf_token } = this.options;
   const { config } = this;
-  const headers = { "Content-Type": "application/json" };
+  const headers = { "Content-Type": "application/json","withCredentials": "false" };
   if (hf_token) {
     headers.Authorization = `Bearer ${hf_token}`;
   }
@@ -515,13 +516,13 @@ async function view_api() {
           config: JSON.stringify(config)
         }),
         headers,
-        credentials: "include"
+        // credentials: "include"
       });
     } else {
       const url = join_urls(config.root, API_INFO_URL);
       response = await this.fetch(url, {
         headers,
-        credentials: "include"
+        // credentials: "include"
       });
     }
     if (!response.ok) {
@@ -541,7 +542,7 @@ async function view_api() {
 }
 async function upload_files(root_url, files, upload_id) {
   var _a;
-  const headers = {};
+  const headers = {"withCredentials": "false"};
   if ((_a = this == null ? void 0 : this.options) == null ? void 0 : _a.hf_token) {
     headers.Authorization = `Bearer ${this.options.hf_token}`;
   }
@@ -560,7 +561,7 @@ async function upload_files(root_url, files, upload_id) {
         method: "POST",
         body: formData,
         headers,
-        credentials: "include"
+        // credentials: "include"
       });
     } catch (e) {
       throw new Error(BROKEN_CONNECTION_MSG + e.message);
@@ -908,7 +909,7 @@ async function post_data(url, body, additional_headers) {
       method: "POST",
       body: JSON.stringify(body),
       headers: { ...headers, ...additional_headers },
-      credentials: "include"
+      // credentials: "include"
     });
   } catch (e) {
     return [{ error: BROKEN_CONNECTION_MSG }, 500];
@@ -1065,7 +1066,7 @@ async function discussions_enabled(space_id) {
   }
 }
 async function get_space_hardware(space_id, hf_token) {
-  const headers = {};
+  const headers = {"withCredentials": "false"};
   if (hf_token) {
     headers.Authorization = `Bearer ${hf_token}`;
   }
@@ -1083,7 +1084,7 @@ async function get_space_hardware(space_id, hf_token) {
   }
 }
 async function set_space_timeout(space_id, timeout, hf_token) {
-  const headers = {};
+  const headers = {"withCredentials": "false"};
   if (hf_token) {
     headers.Authorization = `Bearer ${hf_token}`;
   }
@@ -1150,6 +1151,7 @@ async function duplicate(app_reference, options) {
   const headers = {
     Authorization: `Bearer ${hf_token}`,
     "Content-Type": "application/json",
+    "withCredentials": "false",
     ...cookies ? { Cookie: cookies.join("; ") } : {}
   };
   const user = (await (await fetch(`https://huggingface.co/api/whoami-v2`, {
@@ -1602,13 +1604,13 @@ function submit(endpoint, data, event_data, trigger_id, all_events) {
         }
         if ("event_id" in cancel_request) {
           await fetch2(`${config.root}/cancel`, {
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json","withCredentials": "false" },
             method: "POST",
             body: JSON.stringify(cancel_request)
           });
         }
         await fetch2(`${config.root}/reset`, {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json","withCredentials": "false" },
           method: "POST",
           body: JSON.stringify(reset_request)
         });
@@ -2425,6 +2427,7 @@ class Client {
         session_hash
       });
       headers["Content-Type"] = "application/json";
+      headers["withCredentials"] = "false"
     }
     if (hf_token) {
       headers.Authorization = `Bearer ${hf_token}`;
@@ -2434,7 +2437,7 @@ class Client {
         method: "POST",
         body,
         headers,
-        credentials: "include"
+        // credentials: "include"
       });
       if (!response.ok) {
         throw new Error(
