@@ -73,6 +73,7 @@ export async function resolve_config(
 		: {};
 
 	headers["Content-Type"] = "application/json";
+	headers["withCredentials"] = false;
 
 	if (
 		typeof window !== "undefined" &&
@@ -89,7 +90,7 @@ export async function resolve_config(
 		const config_url = join_urls(endpoint, CONFIG_URL);
 		const response = await this.fetch(config_url, {
 			headers,
-			// credentials: "include"
+			credentials: "include"
 		});
 
 		if (response?.status === 401 && !this.options.auth) {
