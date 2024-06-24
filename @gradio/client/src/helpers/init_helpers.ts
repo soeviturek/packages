@@ -73,7 +73,7 @@ export async function resolve_config(
 		: {};
 
 	headers["Content-Type"] = "application/json";
-	headers["withCredentials"] = false;
+	headers["withCredentials"] = "false";
 
 	if (
 		typeof window !== "undefined" &&
