@@ -82,6 +82,7 @@ async function resolve_config(endpoint) {
   var _a;
   const headers = this.options.hf_token ? { Authorization: `Bearer ${this.options.hf_token}` } : {};
   headers["Content-Type"] = "application/json";
+  headers["withCredentials"] = "false";
   if (typeof window !== "undefined" && window.gradio_config && location.origin !== "http://localhost:9876" && !window.gradio_config.dev_mode) {
     const path = window.gradio_config.root;
     const config = window.gradio_config;
@@ -92,7 +93,7 @@ async function resolve_config(endpoint) {
     const config_url = join_urls(endpoint, CONFIG_URL);
     const response = await this.fetch(config_url, {
       headers,
-      credentials: "include"
+      // credentials: "include"
     });
     if ((response == null ? void 0 : response.status) === 401 && !this.options.auth) {
       throw new Error(MISSING_CREDENTIALS_MSG);
