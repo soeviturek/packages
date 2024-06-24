@@ -92,8 +92,7 @@ async function resolve_config(endpoint) {
   } else if (endpoint) {
     const config_url = join_urls(endpoint, CONFIG_URL);
     const response = await this.fetch(config_url, {
-      headers,
-      credentials: "include"
+      headers
     });
     if ((response == null ? void 0 : response.status) === 401 && !this.options.auth) {
       throw new Error(MISSING_CREDENTIALS_MSG);
